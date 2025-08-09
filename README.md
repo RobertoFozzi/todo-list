@@ -28,7 +28,7 @@ Una semplice applicazione To-Do List realizzata con **HTML**, **CSS** e **JavaSc
 ```
 .
 ├── index.html
-├── styles.css
+├── style.css
 ├── script.js
 ├── .gitignore
 └── README.md
