@@ -11,6 +11,8 @@ body {
     border-radius: 5px;
     margin: 20px auto;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    width: 95%;
 }
 
 h1 {
@@ -20,13 +22,71 @@ h1 {
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.section-title.todo {
+    color: #228B22;
+}
+
+.section-title.completed {
+    color: #888;
+    font-style: italic;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.3em;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: transform 0.2s;
+    vertical-align: middle;
+    outline: none;
+    user-select: none;
+}
+
+#toggle-todo {
+    color: #228B22;
+}
+
+#toggle-completed {
+    color: #888;
+}
+
+.section.collapsed .toggle-btn {
+    transform: rotate(-90deg);
+}
+
+.section.collapsed ul {
+    display: none;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    margin-top: 28px;
+    margin-bottom: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
 #todo-form {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    gap: 12px;
     margin-bottom: 20px;
     padding: 8px;
+}
+
+#todo-input, #add-button {
+    height: 40px;
+    box-sizing: border-box;
 }
 
 #todo-input {
@@ -34,9 +94,8 @@ h1 {
     width: 80%;
     border-radius: 4px;
     border: 1px solid #ccc;
-    margin-bottom: 12px;
+    margin-bottom: 0px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
 }
 
 #todo-input:focus {
@@ -49,7 +108,7 @@ h1 {
 #add-button {
     background-color: green;
     color: #fff;
-    padding: 8px 16px;
+    padding: 0 16px;
     border-radius: 4px;
     border: none;
     cursor: pointer;
@@ -65,16 +124,18 @@ h1 {
     transform: translateY(2px);
 }
 
-#todo-list {
+#todo-list, #completed-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-#todo-list li {
+#todo-list li, #completed-list li {
+    position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
+    gap: 8px;
     margin-bottom: 8px;
     background-color: #fafafa;
     padding: 8px;
@@ -82,18 +143,96 @@ h1 {
     box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-#todo-list li:hover {
+#todo-list li:hover, #completed-list li:hover {
     background-color: #f0f0f0;
 }
 
-#todo-list li button {
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+.menu-button {
+    cursor: pointer;
+    padding: 0 8px;
+    font-size: 20px;
+    margin-left: auto;
+}
+
+.menu-options {
+    position: absolute;
+    top: 45px;
+    right: 8px;
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    padding: 4px 0;
+    z-index: 1000;
+    min-width: 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item {
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.task-checkbox {
+    accent-color: green;
+    margin-right: 12px;
+    width: 20px;
+    height: 20px;
     cursor: pointer;
 }
-#todo-list li button:hover {
-    background-color: #c0392b;
+
+.task-text {
+    font-size: 16px;
+    flex: 1;
+    word-break: break-word;
+}
+
+#completed-list .task-text {
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+.edit-input {
+    font-size: 16px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #bbb;
+    margin-right: 6px;
+    flex: 1;
+}
+
+.save-button {
+    background-color: green;
+    color: #fff;
+    border: none;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+.save-button:hover {
+    background-color: rgb(2, 196, 2);
+}
+
+@media (max-width: 600px) {
+    .todo-container {
+        max-width: 97vw;
+        padding: 4px;
+    }
+    #todo-input {
+        width: 65vw;
+    }
+    .menu-options {
+        min-width: 95px;
+        right: 2px;
+    }
 }

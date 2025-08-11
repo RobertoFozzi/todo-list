@@ -2,7 +2,8 @@
 
 const form = document.getElementById("todo-form");
 const input = document.getElementById("todo-input");
-const list = document.getElementById("todo-list");
+const todoList = document.getElementById("todo-list");
+const completedList = document.getElementById("completed-list");
 
 // Recupera la lista dal localStorage, se esiste
 let tasks = []; // Array vuoto che rappresenta le tue attività
@@ -10,77 +11,168 @@ let tasks = []; // Array vuoto che rappresenta le tue attività
 const savedTasks = localStorage.getItem("todoList"); // Recupera le attività salvate dal localStorage
 if (savedTasks) { // Se ci sono attività salvate
     let parsed = JSON.parse(savedTasks);
-    tasks = parsed.map(t => typeof t === "string" ? { testo: t } : t ); // Assicura che ogni attività sia un oggetto
+    tasks = parsed.map(t => ({
+        testo: t.testo,
+        completata: t.completata || false
+    }));
 
     // Ricrea la lista visiva
-    tasks.forEach(function(task) { // Per ogni attività salvata, questa viene aggiunta alla lista visuale
-        addTaskToDOM(task);
-    });
+    renderTasks();
 }
 
 function addTaskToDOM(task) {
     const li = document.createElement("li"); // Crea un nuovo elemento <li>
-    li.textContent = task.testo; // Imposta il testo dell'elemento <li>
 
-    // Pulsante di cancellazione
-    const deleteButton = document.createElement("button"); // Crea un pulsante di cancellazione
-    deleteButton.textContent = "Elimina"; // Imposta il testo del pulsante di cancellazione
+    // Checkbox
+    const checkbox = document.createElement("input"); // Crea una checkbox
+    checkbox.type = "checkbox"; // Imposta il tipo di input a checkbox
+    checkbox.checked = task.completata; // Imposta lo stato della checkbox in base all
+    checkbox.className = "task-checkbox"; // Aggiunge una classe per lo stile
+    li.appendChild(checkbox); // Aggiunge la checkbox all'elemento <li>
 
-    deleteButton.addEventListener("click", function() {
-        li.remove(); // Rimuove l'elemento <li> dalla lista
-        const index = tasks.indexOf(task); // Trova l'indice della task nell'array
-        if (index > -1) {
-            tasks.splice(index, 1); // Rimuove la task dall'array
-            localStorage.setItem("todoList", JSON.stringify(tasks)); // Aggiorna il localStorage
+    // Testo task
+    const span = document.createElement("span");
+    span.textContent = task.testo;
+    span.className = "task-text"; // Aggiunge una classe per lo stile
+    if (task.completata) {
+        span.style.textDecoration = "line-through"; // Se la task è completata, applica lo stile
+        span.style.color = "#aaa"; // Cambia il colore del testo
+    } else {
+        span.style.textDecoration = "none";
+        span.style.color = "#222";
+    }
+    li.appendChild(span);
+
+    // Pulsante di menù
+    const menuButton = document.createElement("span"); // Crea un pulsante di menù
+    menuButton.className = "menu-button"; // Aggiunge una classe per lo stile
+    menuButton.innerHTML = "&#x2022;&#x2022;&#x2022;"; // Aggiunge tre punti di menù
+    li.appendChild(menuButton); // Aggiunge il pulsante di menù all'elemento <li>
+
+    menuButton.addEventListener("click", function (event) {
+        event.stopPropagation(); //Ferma la propagazione dell'evento e impedisce il click sul <li>
+
+        // Se il menù è gia aperto, lo chiude
+        const existingMenu = li.querySelector(".menu-options");
+        if (existingMenu) {
+            existingMenu.remove(); // Rimuove il menù esistente
+            return; // Esce dalla funzione
         }
-    });
 
-    // Pulsante di modifica
-    const editButton = document.createElement("button"); // Crea un pulsante di modifica
-    editButton.textContent = "Modifica"; // Imposta il testo del pulsante di modifica
+        // Crea il menù delle opzioni
+        const menu = document.createElement("div"); // Crea un nuovo elemento <div> per il menù
+        menu.className = "menu-options"; // Aggiunge una classe per lo stile
 
-    editButton.addEventListener("click", function() {
-        const editInput = document.createElement("input"); // Crea un campo di input per la modifica
-        editInput.type = "text";
-        editInput.value = task.testo; // Imposta il valore dell'input con il testo della task
+        // Modifica
+        const editOption = document.createElement("div");
+        editOption.textContent = "Modifica";
+        editOption.className = "menu-item";
+        editOption.addEventListener("click", function (e) {
+            e.stopPropagation();
+            menu.remove(); // Rimuove il menù dopo il click
 
-        const saveButton = document.createElement("button");
-        saveButton.textContent = "Salva"; // Crea un pulsante per salvare le modifiche
+            // UI per modifica
+            li.innerHTML = "";
+            li.appendChild(checkbox); // Riaggiunge la checkbox
+            const editInput = document.createElement("input"); // Crea un campo di input per la modifica
+            editInput.type = "text";
+            editInput.value = task.testo;
+            editInput.className = "edit-input"; // Aggiunge una classe per lo stile
+            li.appendChild(editInput);
 
-        saveButton.addEventListener("click", function() {
-            const newText = editInput.value.trim(); // Prende il nuovo testo e toglie spazi ai lati
-            if (newText !== '') {
-                task.testo = newText; // Aggiorna il testo della task
-                localStorage.setItem("todoList", JSON.stringify(tasks)); // Aggiorna il localStorage
+            const saveButton = document.createElement("button");
+            saveButton.textContent = "Salva";
+            saveButton.className = "save-button"; // Aggiunge una classe per lo stile
+            li.appendChild(saveButton); // Aggiunge il pulsante di salvataggio
+            // Mantiene il menù a tre pallini
+            li.appendChild(menuButton);
 
-                // Aggiorna localStorage
-                li.textContent = newText;
-                li.appendChild(editButton);
-                li.appendChild(deleteButton);
+            saveButton.addEventListener("click", function () {
+                const newText = editInput.value.trim();
+                if (newText !== '') {
+                    task.testo = newText;
+                    localStorage.setItem("todoList", JSON.stringify(tasks));
+                    renderTasks(); // Rende di nuovo la lista
+                }
+            });
+        });
+
+        // Elimina
+        const deleteOption = document.createElement("div");
+        deleteOption.textContent = "Elimina";
+        deleteOption.className = "menu-item";
+        deleteOption.addEventListener("click", function (e) {
+            e.stopPropagation();
+            menu.remove();
+            const index = tasks.indexOf(task);
+            if (index > -1) {
+                tasks.splice(index, 1);
+                localStorage.setItem("todoList", JSON.stringify(tasks));
+                renderTasks(); // Rende di nuovo la lista
             }
         });
 
-        li.textContent = ''; // Pulisce il testo dell'elemento <li>
-        li.appendChild(editInput); // Aggiunge il campo di input all'elemento
-        li.appendChild(saveButton); // Aggiunge il pulsante di salvataggio all'elemento
+        menu.appendChild(editOption);
+        menu.appendChild(deleteOption);
+        li.appendChild(menu);
+
+        // Chiude il menù se si clicca fuori
+        setTimeout(() => {
+            document.addEventListener("click", function closeMenu(e) {
+                if (!menu.contains(e.target) && e.target !== menuButton) {
+                    menu.remove(); // Rimuove il menù se si clicca fuori
+                    document.removeEventListener("click", closeMenu); // Rimuove l'event listener
+                }
+            });
+        }, 0);
     });
-    li.appendChild(editButton);
-    li.appendChild(deleteButton); // Aggiunge il pulsante di cancellazione all'elemento <li>
-    list.appendChild(li); // Aggiunge l'elemento <li> alla lista
+
+    checkbox.addEventListener("change", function () {
+        task.completata = checkbox.checked;
+        localStorage.setItem("todoList", JSON.stringify(tasks)); // Aggiorna il localStorage
+        renderTasks(); // Rende di nuovo la lista
+    });
+
+    if (task.completata) {
+        completedList.appendChild(li); // Aggiunge l'elemento <li> alla lista completata
+    } else {
+        todoList.appendChild(li); // Aggiunge l'elemento <li> alla lista
+    }
 }
 
-form.addEventListener("submit", function(event) {
+function renderTasks() {
+    todoList.innerHTML = ""; // Pulisce la lista delle attività da completare
+    completedList.innerHTML = ""; // Pulisce la lista delle attività completate
+    tasks.forEach(task => addTaskToDOM(task)); // Rende di nuovo la lista
+}
+
+const toggleTodoBtn = document.getElementById("toggle-todo");
+const toggleCompletedBtn = document.getElementById("toggle-completed");
+const todoSection = document.getElementById("todo-section");
+const completedSection = document.getElementById("completed-section");
+
+toggleTodoBtn.addEventListener("click", function () {
+    todoSection.classList.toggle("collapsed"); // Mostra o nasconde la sezione delle attività da completare
+    todoList.style.display = todoSection.classList.contains("collapsed") ? "none" : "block"; // Nasconde o mostra la lista delle attività da completare
+});
+
+toggleCompletedBtn.addEventListener("click", function () {
+    completedSection.classList.toggle("collapsed"); // Mostra o nasconde la sezione delle attività completate
+    completedList.style.display = completedSection.classList.contains("collapsed") ? "none" : "block"; // Nasconde o mostra la lista delle attività completate
+});
+
+form.addEventListener("submit", function (event) {
     event.preventDefault(); // Evita il ricaricamento della pagina
 
     const taskText = input.value.trim(); // Prende il testo e toglie spazi ai lati
     if (taskText === '') return; // Se il testo è vuoto, non fare nulla (non aggiunge task vuote)
 
-    const newTask = { testo: taskText };
+    const newTask = { testo: taskText, completata: false };
     tasks.push(newTask); // Aggiunge la nuova attività all'array
     localStorage.setItem("todoList", JSON.stringify(tasks)); // Salva l'array nel localStorage
-    addTaskToDOM(newTask); // Aggiunge la nuova attività all'interfaccia utente
+    renderTasks();
 
     // Pulisce il campo di input
     input.value = ''; // Pulisce il campo di input dopo l'aggiunta
-    
-})
+
+});

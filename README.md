@@ -8,6 +8,12 @@ Una semplice applicazione To-Do List realizzata con **HTML**, **CSS** e **JavaSc
   Inserisci il testo e premi "Aggiungi" per creare una nuova task.
 - **Eliminazione delle attività dalla lista**  
   Ogni task ha un pulsante "Elimina" per rimuoverla.
+- **Modifica delle attività**  
+  Puoi modificare il testo di una task tramite il menu a tre pallini.
+- **Segna attività come completata**  
+  Puoi selezionare la checkbox per marcare una task come completata: verrà spostata nella sezione "Attività completate".
+- **Riduci/espandi le sezioni**  
+  Puoi nascondere o mostrare le liste di attività da completare e completate cliccando sulla freccia accanto al titolo.
 - **Persistenza delle attività**  
   Le tue attività vengono salvate nel browser tramite **localStorage**: anche chiudendo o ricaricando la pagina restano disponibili.
 - **Interfaccia minimale e pulita**  
@@ -20,8 +26,10 @@ Una semplice applicazione To-Do List realizzata con **HTML**, **CSS** e **JavaSc
 1. **Clona il repository** oppure scarica i file.
 2. Apri `index.html` nel browser.
 3. Inserisci una nuova attività nel campo di testo e premi "Aggiungi".
-4. Cancella un’attività cliccando sul pulsante "Elimina".
-5. Le attività resteranno salvate anche chiudendo la pagina, grazie alla persistenza via localStorage.
+4. Modifica o cancella un’attività cliccando sul menu a tre pallini e selezionando l’opzione desiderata.
+5. Spunta la checkbox per marcare una task come completata o incompiuta.
+6. Riduci o espandi le sezioni cliccando sulla freccia accanto al titolo.
+7. Le attività resteranno salvate anche chiudendo la pagina, grazie alla persistenza via localStorage.
 
 ## Struttura del progetto
 
@@ -44,14 +52,17 @@ Il progetto include un file **.gitignore** per evitare che file non necessari o 
 - **Riorganizzazione del codice JS**: La logica di gestione delle attività è più chiara e riusabile (funzione `addTaskToDOM`).
 - **Miglioramenti grafici CSS**: Ombre, effetti hover e responsive design.
 - **Gestione file ignorati**: Aggiunto `.gitignore` per una corretta gestione dei file della repo.
+- **Funzionalità completate/incompiute**: Possibilità di segnare le attività come completate, con spostamento automatico fra le sezioni.
+- **Menu azioni sulle task**: Modifica ed eliminazione tramite menu a tre pallini.
+- **Riduzione/espansione delle sezioni**: Le liste delle attività sono riducibili tramite toggle.
 
 ## Idee future
 
-- Possibilità di segnare le attività come "completate"
-- Animazioni e miglioramenti grafici
-- Supporto per dispositivi mobili
-- Ordinamento delle attività
+- Animazioni più avanzate e miglioramenti grafici
+- Ordinamento delle attività (manuale o automatico)
 - Filtri per attività completate/incompiute
+- Supporto a sottoliste o categorie
+- Sincronizzazione tra dispositivi o salvataggio su cloud
 
 ## Autore
 
