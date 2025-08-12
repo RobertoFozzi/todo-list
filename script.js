@@ -5,6 +5,43 @@ const input = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 const completedList = document.getElementById("completed-list");
 
+// Barra del calendario
+const datePicker = document.getElementById("date-picker");
+const prevDayBtn = document.getElementById('prev-day');
+const nextDayBtn = document.getElementById('next-day');
+
+
+// Data di default (oggi)
+let selectedDate = new Date().toISOString().slice(0, 10);
+if (datePicker) {
+    datePicker.value = selectedDate; // Imposta il valore del date picker alla data di oggi
+}
+
+// Cambia la data selezionata dal date picker
+if (datePicker) {
+    datePicker.addEventListener("change", function () {
+        selectedDate = datePicker.value; // Aggiorna la data selezionata
+        renderTasks();
+    });
+}
+
+// Gestisci click sulle frecce
+function shiftDay(delta) {
+    const current = new Date(selectedDate);
+    current.setDate(current.getDate() + delta);
+    // Formatta di nuovo la data per l'input
+    selectedDate = current.toISOString().slice(0, 10);
+    datePicker.value = selectedDate;
+    renderTasks();
+}
+
+if (prevDayBtn) {
+    prevDayBtn.addEventListener('click', () => shiftDay(-1));
+}
+if (nextDayBtn) {
+    nextDayBtn.addEventListener('click', () => shiftDay(1));
+}
+
 // Recupera la lista dal localStorage, se esiste
 let tasks = []; // Array vuoto che rappresenta le tue attività
 
@@ -13,7 +50,8 @@ if (savedTasks) { // Se ci sono attività salvate
     let parsed = JSON.parse(savedTasks);
     tasks = parsed.map(t => ({
         testo: t.testo,
-        completata: t.completata || false
+        completata: t.completata || false,
+        data: t.data || selectedDate
     }));
 
     // Ricrea la lista visiva
@@ -143,7 +181,10 @@ function addTaskToDOM(task) {
 function renderTasks() {
     todoList.innerHTML = ""; // Pulisce la lista delle attività da completare
     completedList.innerHTML = ""; // Pulisce la lista delle attività completate
-    tasks.forEach(task => addTaskToDOM(task)); // Rende di nuovo la lista
+
+    const filteredTasks = tasks.filter(task => task.data === selectedDate);
+
+    filteredTasks.forEach(task => addTaskToDOM(task)); // Rende di nuovo la lista
 }
 
 const toggleTodoBtn = document.getElementById("toggle-todo");
@@ -167,7 +208,7 @@ form.addEventListener("submit", function (event) {
     const taskText = input.value.trim(); // Prende il testo e toglie spazi ai lati
     if (taskText === '') return; // Se il testo è vuoto, non fare nulla (non aggiunge task vuote)
 
-    const newTask = { testo: taskText, completata: false };
+    const newTask = { testo: taskText, completata: false, data: selectedDate };
     tasks.push(newTask); // Aggiunge la nuova attività all'array
     localStorage.setItem("todoList", JSON.stringify(tasks)); // Salva l'array nel localStorage
     renderTasks();

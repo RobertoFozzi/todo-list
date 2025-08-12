@@ -22,6 +22,32 @@ h1 {
     text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.calendar-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin: 2px 0 10px 0;
+    padding: 0;
+    border-radius: 10px;
+}
+
+.calendar-bar input[type="date"] {
+    font-size: 1em;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border: 1px solid #bfcad6;
+    background: #fff;
+    color: #222;
+    box-shadow: 0 1px 2px rgba(80, 80, 80, 0.04);
+    transition: border-color 0.02s;
+}
+
+.calendar-bar input[type="date"]:focus {
+    border-color: #228B22;
+    outline: none;
+}
+
 .section-title.todo {
     color: #228B22;
 }
@@ -29,6 +55,23 @@ h1 {
 .section-title.completed {
     color: #888;
     font-style: italic;
+}
+
+.arrow-btn {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    color: #228B22;
+    cursor: pointer;
+    padding: 4px 10px;
+    transition: color 0.18s, background 0.18s;
+    border-radius: 50%;
+    outline: none;
+}
+.arrow-btn:hover,
+.arrow-btn:focus {
+    background: #eafae7;
+    color: #155c12;
 }
 
 .toggle-btn {
@@ -234,5 +277,15 @@ h1 {
     .menu-options {
         min-width: 95px;
         right: 2px;
+    }
+    .calendar-bar {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px 0;
+    }
+    .calendar-bar input[type="date"],
+    .calendar-bar button {
+        width: 100%;
+        font-size: 1.03em;
     }
 }

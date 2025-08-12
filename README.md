@@ -6,6 +6,10 @@ Una semplice applicazione To-Do List realizzata con **HTML**, **CSS** e **JavaSc
 
 - **Aggiunta di nuove attività**  
   Inserisci il testo e premi "Aggiungi" per creare una nuova task.
+- **Selezione della data**  
+  Sotto la barra di inserimento puoi scegliere il giorno tramite il date picker: le attività sono associate a una specifica data.
+- **Navigazione tra i giorni**  
+  Usa le frecce accanto al date picker per spostarti avanti e indietro di un giorno e visualizzare le attività di quella data.
 - **Eliminazione delle attività dalla lista**  
   Ogni task ha un pulsante "Elimina" per rimuoverla.
 - **Modifica delle attività**  
@@ -25,11 +29,12 @@ Una semplice applicazione To-Do List realizzata con **HTML**, **CSS** e **JavaSc
 
 1. **Clona il repository** oppure scarica i file.
 2. Apri `index.html` nel browser.
-3. Inserisci una nuova attività nel campo di testo e premi "Aggiungi".
-4. Modifica o cancella un’attività cliccando sul menu a tre pallini e selezionando l’opzione desiderata.
-5. Spunta la checkbox per marcare una task come completata o incompiuta.
-6. Riduci o espandi le sezioni cliccando sulla freccia accanto al titolo.
-7. Le attività resteranno salvate anche chiudendo la pagina, grazie alla persistenza via localStorage.
+3. Seleziona una data tramite il date picker oppure usa le frecce per cambiare giorno.
+4. Inserisci una nuova attività nel campo di testo e premi "Aggiungi": sarà associata alla data selezionata.
+5. Modifica o cancella un’attività cliccando sul menu a tre pallini e selezionando l’opzione desiderata.
+6. Spunta la checkbox per marcare una task come completata o incompiuta.
+7. Riduci o espandi le sezioni cliccando sulla freccia accanto al titolo.
+8. Le attività resteranno salvate anche chiudendo la pagina, grazie alla persistenza via localStorage.
 
 ## Struttura del progetto
 
@@ -49,6 +54,7 @@ Il progetto include un file **.gitignore** per evitare che file non necessari o 
 ## Modifiche principali rispetto alla versione iniziale
 
 - **Salvataggio delle attività**: Le task vengono ora salvate e caricate tramite localStorage.
+- **Selettore della data e navigazione**: Ogni attività è associata a una data; puoi navigare tra i giorni con il date picker e le frecce.
 - **Riorganizzazione del codice JS**: La logica di gestione delle attività è più chiara e riusabile (funzione `addTaskToDOM`).
 - **Miglioramenti grafici CSS**: Ombre, effetti hover e responsive design.
 - **Gestione file ignorati**: Aggiunto `.gitignore` per una corretta gestione dei file della repo.
